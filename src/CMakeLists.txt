@@ -13,4 +13,9 @@ configure_file(
 # Add the binary tree to the includes path to find generated headers
 include_directories("${PROJECT_BINARY_DIR}")
 
+# Include grid code
+include_directories("${PROJECT_SOURCE_DIR}/grid")
+add_subdirectory(grid)
+
 add_executable(castle main.cc)
+target_link_libraries(castle grid)

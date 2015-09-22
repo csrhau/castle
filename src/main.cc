@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "grid.h"
 #include "castle_config.h"
 
 void print_int(int printme) {
@@ -11,4 +12,7 @@ int main(int argc, char *argv[]) {
   a[:] = 42;
   print_int(a[:]);
   std::cout << "Castle " << CASTLE_VERSION_MAJOR << CASTLE_VERSION_MINOR << std::endl;
+
+  Grid<RowExchangePolicy> g;
+  g.step();
 }
