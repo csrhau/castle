@@ -2,14 +2,22 @@
 #include <algorithm>
 
 #include <stdlib.h>
-#include<cilk/cilk.h>
+#include <cilk/cilk.h>
+#include <cilk/reducer_opadd.h>
 
 #include "grid.h"
 #include "castle_config.h"
 
 int main(int argc, char *argv[]) {
   std::cout << "Castle v" << CASTLE_VERSION_MAJOR << CASTLE_VERSION_MINOR 
-            << "\nSimulating a " << NX << "x" << NY << " domain." << std::endl; 
+            << "\nSimulating a " << NX << "x" << NY << " domain." 
+            << "Running in "
+#if defined(CILK_PAR)
+              "Parallel"
+#else
+              "Serial"
+#endif
+              << std::endl;
 
   // Define values
   const size_t nx = NX;
@@ -42,25 +50,23 @@ int main(int argc, char *argv[]) {
 
   for (size_t t = 0; t < nt; ++t) {
 #if defined(CILK_PAR)
-    std::cout << "par" << std::endl;
     cilk_for (size_t r = 1; r < nx - 1; ++r) {
       u1[r][1:nx-2] = u0[r][1:nx-2] 
-                                 + cx * (u0[r][0:nx-2] 
-                                      - 2 * u0[r][1:nx-2] 
-                                      + u0[r][2:nx-2])
-                                 + cy * (u0[r-1][1:nx-2] 
-                                      - 2 * u0[r][1:nx-2] 
-                                      + u0[r+1][1*1:nx-2]);
+                    + cx * (u0[r][0:nx-2] 
+                         - 2 * u0[r][1:nx-2] 
+                         + u0[r][2:nx-2])
+                    + cy * (u0[r-1][1:nx-2] 
+                         - 2 * u0[r][1:nx-2] 
+                         + u0[r+1][1*1:nx-2]);
     }
 #else
-    std::cout << "cereal" << std::endl;
     u1[1:ny-2][1:nx-2] = u0[1:ny-2][1:nx-2] 
-                               + cx * (u0[1:ny-2][0:nx-2] 
-                                    - 2 * u0[1:ny-2][1:nx-2] 
-                                    + u0[1:ny-2][2:nx-2])
-                               + cy * (u0[0:ny-2][1:nx-2] 
-                                    - 2 * u0[1:ny-2][1:nx-2] 
-                                    + u0[2:ny-2][1*1:nx-2]);
+                       + cx * (u0[1:ny-2][0:nx-2] 
+                            - 2 * u0[1:ny-2][1:nx-2] 
+                            + u0[1:ny-2][2:nx-2])
+                       + cy * (u0[0:ny-2][1:nx-2] 
+                            - 2 * u0[1:ny-2][1:nx-2] 
+                            + u0[2:ny-2][1*1:nx-2]);
 #endif
     // Reflect Boundaries TODO: consider stencil radius
     u1[0][0:nx] = u1[1][0:nx];
@@ -70,8 +76,16 @@ int main(int argc, char *argv[]) {
 
     // Update state
     std::swap(u0, u1);
-    if (t % 128 == 0) {
-      const double tNow = __sec_reduce_add(u0[1:ny-2][1:nx-2]);
+    if (t % 1 == 0) {
+#if defined(CILK_PAR)
+    cilk::reducer< cilk::op_add<double> > diff_sum(0);
+    cilk_for (size_t r = 1; r < nx - 1; ++r) {
+      *diff_sum += __sec_reduce_add(u0[r][1:nx-2]);
+    }
+    const double tNow = diff_sum.get_value();
+#else
+    const double tNow = __sec_reduce_add(u0[1:ny-2][1:nx-2]);
+#endif
       std::cout << "ts " << t << " temp: " << tNow << std::endl;
     }
   }

@@ -1,8 +1,10 @@
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required (VERSION 2.8)
 project (castle)
 # Version numbers
 set (CASTLE_VERSION_MAJOR 1)
 set (CASTLE_VERSION_MINOR 0)
+set(CMAKE_BUILD_TYPE Release)
+
 
 # Simulation Parameters
 set(XD 2 CACHE STRING "Magnitude of X Dimension")
