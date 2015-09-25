@@ -3,6 +3,13 @@
 
 #define CASTLE_VERSION_MAJOR @CASTLE_VERSION_MAJOR@
 #define CASTLE_VERSION_MINOR @CASTLE_VERSION_MINOR@
+#define NX @NX@
+#define NY @NY@
+#define NT @NT@
+#define NU @NU@
+#define SG @SG@
+#define XD @XD@
+#define YD @YD@
 
 #define XD @XD@
 #define YD @YD@
