@@ -4,4 +4,14 @@
 #define CASTLE_VERSION_MAJOR @CASTLE_VERSION_MAJOR@
 #define CASTLE_VERSION_MINOR @CASTLE_VERSION_MINOR@
 
+#define XD @XD@
+#define YD @YD@
+#define NX @NX@
+#define NY @NY@
+#define NT @NT@
+#define NU @NU@
+#define SG @SG@
+
+#cmakedefine CILK_PAR
+
 #endif
