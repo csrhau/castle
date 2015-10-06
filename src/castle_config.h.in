@@ -5,4 +5,9 @@
 #define CASTLE_VERSION_MAJOR @CASTLE_VERSION_MAJOR@
 #define CASTLE_VERSION_MINOR @CASTLE_VERSION_MINOR@
 
+// Stringifying parameters
+#define xstr(s) str(s)
+#define str(s) #s
+#define CASTLE_DATASET xstr(@CASTLE_DATASET@)
+
 #endif
