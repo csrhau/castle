@@ -19,6 +19,7 @@ include_directories("${PROJECT_BINARY_DIR}")
 include_directories("${PROJECT_SOURCE_DIR}/math_lib")
 add_subdirectory(math_lib)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 # add the executable
 add_executable(castle castle.cc)
