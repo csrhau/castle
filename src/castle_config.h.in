@@ -1,0 +1,8 @@
+#ifndef CUDA_CASTLE_CONFIG_H 
+#define CUDA_CASTLE_CONFIG_H 
+
+// the configured options and settings for CASTLE
+#define CASTLE_VERSION_MAJOR @CASTLE_VERSION_MAJOR@
+#define CASTLE_VERSION_MINOR @CASTLE_VERSION_MINOR@
+
+#endif
