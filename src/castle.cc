@@ -8,8 +8,9 @@
 #include "hdf5.h"
 #include "hdf5_hl.h"
 
-#include "mymath.h"
 #include "castle_config.h"
+#include "driver.h"
+#include "mymath.h"
 
 #define GETOPTS "i:p:r:t:"
 static char *progname;
@@ -88,7 +89,8 @@ int main(int argc, char *argv[]) {
 
   // Run the simulation!
   steady_clock::time_point t_start = steady_clock::now();
-  foosay();
+  Driver d;
+  d.run();
   steady_clock::time_point t_end = steady_clock::now();
   // End the simulation!
 
@@ -98,7 +100,6 @@ int main(int argc, char *argv[]) {
   delete[] next;
   return EXIT_SUCCESS;
 } 
-
 
 void print_usage(void) {
   fprintf(stderr, "%s: A simple 2D simulation of the diffusion equation.\n", progname);
