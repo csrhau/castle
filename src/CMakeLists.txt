@@ -39,5 +39,5 @@ set(LINK_LIBS ${LINK_LIBS} ${HDF5_LIBRARIES})
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 # add the executable
-add_executable(castle castle.cc driver.cc driver.h)
+add_executable(castle castle.cc driver.cc driver.h writer.cc writer.h)
 target_link_libraries(castle ${LINK_LIBS})

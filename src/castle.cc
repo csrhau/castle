@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <chrono>
+#include <string>
 
 #include "hdf5.h"
 #include "hdf5_hl.h"
@@ -89,7 +90,7 @@ int main(int argc, char *argv[]) {
 
   // Run the simulation!
   steady_clock::time_point t_start = steady_clock::now();
-  Driver d;
+  Driver d(std::string("Hello, World!"));
   d.run();
   steady_clock::time_point t_end = steady_clock::now();
   // End the simulation!
