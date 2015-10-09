@@ -11,6 +11,7 @@
 
 #include "castle_config.h"
 #include "driver.h"
+#include "input_file.h"
 #include "mymath.h"
 
 #define GETOPTS "i:p:r:t:"
@@ -28,21 +29,15 @@ int main(int argc, char *argv[]) {
   progname = argv[0];
   int show_usage = 0;
   int outrate = 1, timesteps = 17;
-  char *infile = NULL, *prefix = NULL;
+  std::string infile, prefix;
   int optc;
   while ((optc = getopt_long(argc, argv, GETOPTS, long_opts, NULL)) != -1) {
     switch (optc) {
       case 'i':
-        if (infile != NULL) {
-          free(infile);
-        }
-        infile = strdup(optarg);
+        infile = std::string(optarg);
         break;
       case 'p':
-        if (prefix != NULL) {
-          free(prefix);
-        }
-        prefix = strdup(optarg);
+        prefix = std::string(optarg);
         break;
       case 'r':
         outrate = atoi(optarg);
@@ -58,35 +53,21 @@ int main(int argc, char *argv[]) {
           show_usage = 1;
     }
   }
-  if (show_usage == 1 || optind < argc || infile == NULL || prefix == NULL) {
+  if (show_usage == 1 || optind < argc || infile.empty() || prefix.empty()) {
     print_usage();
     return EXIT_FAILURE;
   }
-  // READ FILE
-  hsize_t dims[2];
-  hid_t file_id;
-  if ((file_id = H5Fopen(infile, H5F_ACC_RDONLY, H5P_DEFAULT)) < 0) {
-    print_usage();
-    return EXIT_FAILURE;
-  }
-  if (H5LTget_dataset_info(file_id, CASTLE_DATASET, dims, NULL, NULL) < 0) {
-    print_usage();
-    return EXIT_FAILURE;
-  }
-  size_t rows = dims[0];
-  size_t cols = dims[1];
+
+  InputFile input_file(infile);
+  std::cout << "Dataset has " << input_file.get_rows() << " rows by " 
+            << input_file.get_cols() << "cols" << std::endl;
+
+  // READ FILE - Todo, replace with Infile
+  size_t rows = input_file.get_rows();
+  size_t cols = input_file.get_cols();
   double *data = new double[rows * cols];
   double *next = new double[rows * cols];
-  double width, depth, nu, sigma; 
-  if (H5LTread_dataset_double(file_id, CASTLE_DATASET, data) < 0
-   || H5LTget_attribute_double(file_id, "/domain/", "width", &width) < 0 
-   || H5LTget_attribute_double(file_id, "/domain/", "depth", &depth) < 0 
-   || H5LTget_attribute_double(file_id, "/properties/", "nu", &nu) < 0 
-   || H5LTget_attribute_double(file_id, "/properties/", "sigma", &sigma) < 0) {
-    fprintf(stderr, "Encountered an issue reading the dataset\n");
-    return EXIT_FAILURE;
-  };
-  H5Fclose(file_id);
+  input_file.populate_data(data);
 
   // Run the simulation!
   steady_clock::time_point t_start = steady_clock::now();
