@@ -27,4 +27,4 @@
 *.out
 *.app
 *.x
-build/
+*_build/

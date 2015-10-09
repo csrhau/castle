@@ -30,6 +30,7 @@ configure_file (
 # add the binary tree to the search path for include files
 # so that we will find castle_config.h
 include_directories("${PROJECT_BINARY_DIR}")
+# Add the generic header directory
  
 # Include HDF5
 find_package(HDF5 COMPONENTS C HL)
@@ -38,6 +39,7 @@ set(LINK_LIBS ${LINK_LIBS} ${HDF5_LIBRARIES})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
+include_directories("${PROJECT_SOURCE_DIR}/deqn")
 # add the executable
 add_executable(castle castle.cc driver.cc driver.h writer.cc writer.h)
 target_link_libraries(castle ${LINK_LIBS})
