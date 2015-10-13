@@ -15,7 +15,7 @@ for TECH in ${CASTLE_TECHNOLOGIES[@]}; do
   cd $DIRECTORY
   cmake -DCASTLE_TECHNOLOGY:STRING=${TECH} ../src
   if [[ $# -eq 1 ]]; then # -make was specified
-    make
+    make -j
   fi
   cd $CWD
 done

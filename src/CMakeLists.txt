@@ -41,5 +41,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 include_directories("${PROJECT_SOURCE_DIR}/deqn")
 # add the executable
-add_executable(castle castle.cc driver.cc driver.h writer.cc writer.h input_file.cc input_file.h)
+file(GLOB CXX_SRCS *.cc)
+file(GLOB CXX_HDRS *.h)
+add_executable(castle ${CXX_SRCS} ${CXX_HDRS})
 target_link_libraries(castle ${LINK_LIBS})
