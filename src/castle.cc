@@ -12,7 +12,6 @@
 #include "castle_config.h"
 #include "driver.h"
 #include "input_file.h"
-#include "mymath.h"
 
 #define GETOPTS "i:p:r:t:"
 static char *progname;

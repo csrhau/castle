@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [[ $# -gt 1 || $# -eq 1 &&  $1 != "-make" ]]; then
+if [[ $# -gt 1 || $# -eq 1 && $1 != "-make" ]]; then
   echo "Usage:"
   echo "$0 [-make]"
   exit 1;

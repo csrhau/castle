@@ -3,7 +3,6 @@
 #include <iostream>
 #include <string>
 
-#include "mymath.h"
 #include "deqn.h"
 #include "writer.h"
 
@@ -24,6 +23,4 @@ void Driver::run() {
     _writer.write();
     d.say_hi();
   }
-
-  foosay();
 }
