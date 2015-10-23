@@ -3,7 +3,8 @@
 
 class Deqn {
   public:
-    void say_hi(void) const;
+    void say_hi() const;
+    void advance(); 
 };
 
 #endif
