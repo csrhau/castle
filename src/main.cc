@@ -1,4 +1,4 @@
-#include "castle.h" 
+#include "main.h" 
 
 #include <getopt.h>
 #include <cstdlib>
