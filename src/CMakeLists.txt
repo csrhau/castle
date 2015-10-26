@@ -9,6 +9,7 @@ set (CMAKE_BUILD_TYPE Release)
 set(CASTLE_TECHNOLOGY "cpp" CACHE STRING "Implementation technology chosen by the user at CMake configure time")
 set_property(CACHE CASTLE_TECHNOLOGY PROPERTY STRINGS cpp cilk cuda opencl)
 message(STATUS "Building '${CASTLE_TECHNOLOGY}' version")
+include_directories("${PROJECT_SOURCE_DIR}/deqn_headers")
 if (${CASTLE_TECHNOLOGY} MATCHES "cpp")
   include_directories("${PROJECT_SOURCE_DIR}/cpp_deqn")
   add_subdirectory(cpp_deqn)
@@ -39,7 +40,6 @@ set(LINK_LIBS ${LINK_LIBS} ${HDF5_LIBRARIES})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-include_directories("${PROJECT_SOURCE_DIR}/deqn")
 # add the executable
 file(GLOB CXX_SRCS *.cc)
 file(GLOB CXX_HDRS *.h)

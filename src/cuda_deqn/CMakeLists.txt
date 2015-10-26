@@ -3,7 +3,7 @@ find_package(CUDA REQUIRED)
 
 set(CUDA_NVCC_FLAGS "-arch=compute_20 -code=sm_20,compute_20")
 
-include_directories("${PROJECT_SOURCE_DIR}/deqn")
+include_directories("${PROJECT_SOURCE_DIR}/deqn_headers")
 
 file(GLOB CXX_SRCS *.cc)
 file(GLOB CUDA_SRCS *.cu)
