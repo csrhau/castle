@@ -10,7 +10,7 @@
 #include "hdf5_hl.h"
 
 #include "castle_config.h"
-#include "driver.h"
+#include "simulator.h"
 #include "input_file.h"
 
 #define GETOPTS "i:p:r:t:"
@@ -57,32 +57,19 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
-  InputFile input_file(infile);
-  std::cout << "Dataset has " << input_file.get_rows() << " rows by " 
-            << input_file.get_cols() << "cols" << std::endl;
-
-  // READ FILE - Todo, replace with Infile
-  size_t rows = input_file.get_rows();
-  size_t cols = input_file.get_cols();
-  double *data = new double[rows * cols];
-  double *next = new double[rows * cols];
-  input_file.populate_data(data);
-
-  // Run the simulation!
+  // Let's do this!
   steady_clock::time_point t_start = steady_clock::now();
-  Driver d(std::string("Hello, World!"));
-  d.run();
+  Simulator simulator(infile, prefix, outrate, timesteps);
+  simulator.run();
   steady_clock::time_point t_end = steady_clock::now();
-  // End the simulation!
 
+  // Output duration and exit
   duration<double> runtime = duration_cast<duration<double>>(t_end - t_start);
-  std::cout << "Runtime: " << runtime.count() << " seconds." << std::endl;
-  delete[] data;
-  delete[] next;
+  std::cout << "App Runtime: " << runtime.count() << " seconds." << std::endl;
   return EXIT_SUCCESS;
 } 
 
-void print_usage(void) {
+void print_usage() {
   fprintf(stderr, "%s: A simple 2D simulation of the diffusion equation.\n", progname);
   fprintf(stderr, "Usage: %s [OPTIONS]\n", progname);
   fprintf(stderr, "  -i,  --infile            Path to input file       [required]\n"

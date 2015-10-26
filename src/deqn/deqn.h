@@ -3,6 +3,9 @@
 
 class Deqn {
   public:
+    Deqn();
+    ~Deqn();
+    void initialize();
     void say_hi() const;
     void advance(); 
 };

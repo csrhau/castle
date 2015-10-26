@@ -4,6 +4,10 @@
 
 #include "deqn_impl.h"
 
+Deqn::Deqn() {}
+Deqn::~Deqn() {}
+void Deqn::initialize() {}
+
 void Deqn::say_hi() const {
   std::cout << "hi from cpp deqn object!" << std::endl;
 }

@@ -10,7 +10,7 @@
 
 InputFile::InputFile(std::string filename_) : _filename(filename_) {
   if ((_file_id = H5Fopen(_filename.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT)) < 0) {
-    throw std::invalid_argument(std::string("invalid filename") + filename_);
+    throw std::invalid_argument(std::string("Invalid filename: ") + filename_);
   }
   if (H5LTget_dataset_info(_file_id, CASTLE_DATASET, _dims, NULL, NULL) < 0) {
     throw std::logic_error("unable to read dataset info");
@@ -56,6 +56,3 @@ void InputFile::populate_data(double *data) const {
     throw std::logic_error("unable to read dataset");
   }
 }
-
-
-

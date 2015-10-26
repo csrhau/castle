@@ -1,5 +1,5 @@
-#ifndef CASTLE_DEQN_IMPL_H
-#define CASTLE_DEQN_IMPL_H
+#ifndef CASTLE_CPP_DEQN_IMPL_H
+#define CASTLE_CPP_DEQN_IMPL_H
 
 class DeqnImpl {
   public:
