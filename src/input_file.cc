@@ -15,10 +15,10 @@ InputFile::InputFile(std::string filename_) : _filename(filename_) {
   if (H5LTget_dataset_info(_file_id, CASTLE_DATASET, _dims, NULL, NULL) < 0) {
     throw std::logic_error("unable to read dataset info");
   } 
-  if (H5LTget_attribute_double(_file_id, "/domain/", "width", &_width) < 0 
-   || H5LTget_attribute_double(_file_id, "/domain/", "depth", &_depth) < 0 
-   || H5LTget_attribute_double(_file_id, "/properties/", "nu", &_nu) < 0 
-   || H5LTget_attribute_double(_file_id, "/properties/", "sigma", &_sigma) < 0) {
+  if( H5LTget_attribute_double(_file_id, "/properties/", "nu", &_nu) < 0 
+   || H5LTget_attribute_double(_file_id, "/properties/", "sigma", &_sigma) < 0
+   || H5LTget_attribute_double(_file_id, "/domain/", "width", &_width) < 0 
+   || H5LTget_attribute_double(_file_id, "/domain/", "depth", &_depth) < 0) { 
     throw std::logic_error("unable to read dataset attribute");
   }
 }
@@ -35,20 +35,20 @@ int InputFile::get_cols() const {
   return _dims[1];
 }
 
-double InputFile::get_width() const {
-  return _width;
-}
-
-double InputFile::get_depth() const {
-  return _depth;
-}
-
 double InputFile::get_nu() const {
   return _nu;
 }
 
 double InputFile::get_sigma() const {
   return _sigma;
+}
+
+double InputFile::get_width() const {
+  return _width;
+}
+
+double InputFile::get_depth() const {
+  return _depth;
 }
 
 void InputFile::populate_data(double *data) const {
