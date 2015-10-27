@@ -15,10 +15,10 @@ InputFile::InputFile(std::string filename_) : _filename(filename_) {
   if (H5LTget_dataset_info(_file_id, CASTLE_DATASET, _dims, NULL, NULL) < 0) {
     throw std::logic_error("unable to read dataset info");
   } 
-  if( H5LTget_attribute_double(_file_id, "/properties/", "nu", &_nu) < 0 
-   || H5LTget_attribute_double(_file_id, "/properties/", "sigma", &_sigma) < 0
-   || H5LTget_attribute_double(_file_id, "/domain/", "width", &_width) < 0 
-   || H5LTget_attribute_double(_file_id, "/domain/", "depth", &_depth) < 0) { 
+  if( H5LTget_attribute_double(_file_id, CASTLE_PROPERTIES_GROUP, CASTLE_PROPERTIES_NU_ATTR, &_nu) < 0 
+   || H5LTget_attribute_double(_file_id, CASTLE_PROPERTIES_GROUP, CASTLE_PROPERTIES_SIGMA_ATTR, &_sigma) < 0
+   || H5LTget_attribute_double(_file_id, CASTLE_DOMAIN_GROUP, CASTLE_DOMAIN_WIDTH_ATTR, &_width) < 0 
+   || H5LTget_attribute_double(_file_id, CASTLE_DOMAIN_GROUP, CASTLE_DOMAIN_DEPTH_ATTR, &_depth) < 0) { 
     throw std::logic_error("unable to read dataset attribute");
   }
 }

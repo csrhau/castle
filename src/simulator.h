@@ -17,6 +17,8 @@ class Simulator {
     double _sigma;
     double _width;
     double _depth;
+    double _cx;
+    double _cy;
     double _initial_temp;
     double *_u0;
     double *_u1;

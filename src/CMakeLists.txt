@@ -3,11 +3,20 @@ project (castle)
 # The version number.
 set (CASTLE_VERSION_MAJOR 1)
 set (CASTLE_VERSION_MINOR 0)
-set (CASTLE_DATASET "/temperature")
+# Build type, release = optimised
 set (CMAKE_BUILD_TYPE Release)
 
+# HDF5 paths
+set (CASTLE_DATASET "/temperature")
+set (CASTLE_DOMAIN_GROUP "/domain/") 
+set (CASTLE_DOMAIN_WIDTH_ATTR "width")
+set (CASTLE_DOMAIN_DEPTH_ATTR "depth")
+set (CASTLE_PROPERTIES_GROUP "/properties/")
+set (CASTLE_PROPERTIES_NU_ATTR "nu")
+set (CASTLE_PROPERTIES_SIGMA_ATTR "sigma")
+
 set(CASTLE_TECHNOLOGY "cpp" CACHE STRING "Implementation technology chosen by the user at CMake configure time")
-set_property(CACHE CASTLE_TECHNOLOGY PROPERTY STRINGS cpp cilk cuda opencl)
+set_property(CACHE CASTLE_TECHNOLOGY PROPERTY STRINGS cpp cilk cuda opencl) 
 message(STATUS "Building '${CASTLE_TECHNOLOGY}' version")
 include_directories("${PROJECT_SOURCE_DIR}/deqn_headers")
 if (${CASTLE_TECHNOLOGY} MATCHES "cpp")
