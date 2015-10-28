@@ -8,11 +8,11 @@
 class Simulator {
   private:
     std::string _prefix;
-    int _outrate;
-    int _timestep;
-    int _timesteps;
-    int _rows;
-    int _cols;
+    unsigned int _outrate;
+    unsigned int _timestep;
+    unsigned int _timesteps;
+    unsigned int _rows;
+    unsigned int _cols;
     double _nu;
     double _sigma;
     double _width;

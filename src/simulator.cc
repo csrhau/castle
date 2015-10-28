@@ -6,6 +6,9 @@
 #include <sstream>
 #include <string>
 
+#include "hdf5.h"
+#include "hdf5_hl.h"
+
 #include "deqn.h"
 #include "fpcompare.h"
 #include "castle_config.h"
@@ -39,8 +42,9 @@ Simulator::Simulator(std::string infile_,
   _u1 = static_cast<double *>(malloc(_rows * _cols * sizeof(double)));
   input_file.populate_data(_u1);
   // Ensure the boundary layer is reflected at ts 0 
-  reflect();   
+   reflect();   
   std::swap(_u0, _u1);
+  persist();
   _initial_temp = get_temperature();  
 }
 
@@ -64,7 +68,7 @@ double Simulator::get_temperature() const {
   // Calculate temp
   double temperature = 0;
   for (int i = get_ymin(); i < get_ymax(); ++i) {
-    for (int j = get_ymin(); j < get_ymax(); ++j) {
+    for (int j = get_xmin(); j < get_xmax(); ++j) {
       const size_t center = INDEX2D(i, j, _rows, _cols);
       temperature += _u0[center];
     }
@@ -101,7 +105,7 @@ void Simulator::step() {
 
 void Simulator::diffuse() {
   for (int i = get_ymin(); i < get_ymax(); ++i) {
-    for (int j = get_xmin(); j < get_ymax(); ++j) {
+    for (int j = get_xmin(); j < get_xmax(); ++j) {
       const int center = INDEX2D(i, j, _rows, _cols);
       const int north = INDEX2D(i-1, j, _rows, _cols);
       const int west = INDEX2D(i, j-1, _rows, _cols);
@@ -116,14 +120,14 @@ void Simulator::diffuse() {
 
 void Simulator::reflect() {
   // Horizontal (top/bottom) boundaries
-  for (int j = get_xmin(); j < get_ymax(); ++j) {
+  for (int j = get_xmin(); j < get_xmax(); ++j) {
     // Top
     const size_t top_outer = INDEX2D(get_ymin() - BORDER, j, _rows, _cols);
     const size_t top_inner = INDEX2D(get_ymin(), j, _rows, _cols);
     _u1[top_outer] = _u1[top_inner];
     // Bottom
-    const size_t bottom_outer = INDEX2D(get_ymax() + BORDER, j, _rows, _cols);
-    const size_t bottom_inner = INDEX2D(get_ymax(), j, _rows, _cols);
+    const size_t bottom_outer = INDEX2D(get_ymax(), j, _rows, _cols);
+    const size_t bottom_inner = INDEX2D(get_ymax() - BORDER, j, _rows, _cols);
     _u1[bottom_outer] = _u1[bottom_inner];
   }
   // Vertical (Left/Right) boundaries
@@ -133,8 +137,8 @@ void Simulator::reflect() {
     const size_t left_inner = INDEX2D(i, get_xmin(), _rows, _cols);
     _u1[left_outer] = _u1[left_inner];
     // Right
-    const size_t right_outer = INDEX2D(i, get_xmax() + BORDER, _rows, _cols);
-    const size_t right_inner = INDEX2D(i, get_xmax() , _rows, _cols);
+    const size_t right_outer = INDEX2D(i, get_xmax(), _rows, _cols);
+    const size_t right_inner = INDEX2D(i, get_xmax() - BORDER, _rows, _cols);
     _u1[right_outer] = _u1[right_inner];
   }
 }
@@ -142,6 +146,8 @@ void Simulator::reflect() {
 void Simulator::persist() {
   std::stringstream namer;
   namer << _prefix << "_" << _timestep << ".h5";
-  std::cout << "Simulator persisting output to file: " 
-            << namer.str() << std::endl;
+  hsize_t dims[] = {_rows, _cols};
+  hid_t file_id = H5Fcreate(namer.str().c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+  H5LTmake_dataset(file_id, CASTLE_DATASET, 2, dims, H5T_NATIVE_DOUBLE, _u0);
+  H5Fclose(file_id);
 }
