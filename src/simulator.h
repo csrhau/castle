@@ -9,7 +9,6 @@ class Simulator {
   private:
     std::string _prefix;
     unsigned int _outrate;
-    unsigned int _timestep;
     unsigned int _timesteps;
     unsigned int _rows;
     unsigned int _cols;
@@ -46,7 +45,7 @@ class Simulator {
     void step();
     void diffuse(); 
     void reflect();
-    void persist();
+    void persist(int timestep_);
 };
 
 #endif

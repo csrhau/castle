@@ -40,11 +40,12 @@ Simulator::Simulator(std::string infile_,
   std::cout << "CX: " << _cx << " CY: " << _cy << std::endl;
   _u0 = static_cast<double *>(malloc(_rows * _cols * sizeof(double)));
   _u1 = static_cast<double *>(malloc(_rows * _cols * sizeof(double)));
+  // Build the start state in _u1
   input_file.populate_data(_u1);
   // Ensure the boundary layer is reflected at ts 0 
-   reflect();   
+  reflect();   
+  // Allow 
   std::swap(_u0, _u1);
-  persist();
   _initial_temp = get_temperature();  
 }
 
@@ -77,23 +78,23 @@ double Simulator::get_temperature() const {
 }
 
 void Simulator::run() {
-  while (_timestep < _timesteps) {
+  persist(0);
+  for (int timestep = 1; timestep <= _timesteps; ++timestep) {
     step();
-    ++_timestep;
     double new_temp = get_temperature();
     if (Tools::DoubleCompare::not_equal(_initial_temp, new_temp)) {
-      std::cerr << "WARNING! Temperature divergence detected after step "
-                << _timestep << ". Initial temperature: " << _initial_temp
+      std::cerr << "WARN: Temperature divergence detected after step "
+                << timestep << ". Initial temperature: " << _initial_temp
                 << ", Current temperature: " << new_temp << ", delta: "
                 << (new_temp - _initial_temp) << std::endl;
     }
-    if (_timestep % _outrate == 0) {
-      persist();
+    if (timestep % _outrate == 0) {
+      persist(timestep);
     }
   }
   // Persist final state only if not done above.
-  if (_timestep % _outrate != 0) {
-    persist();
+  if (_timesteps % _outrate != 0) {
+    persist(_timesteps);
   }
 }
 
@@ -143,9 +144,9 @@ void Simulator::reflect() {
   }
 }
 
-void Simulator::persist() {
+void Simulator::persist(int timestep_) {
   std::stringstream namer;
-  namer << _prefix << "_" << _timestep << ".h5";
+  namer << _prefix << "_" << timestep_ << ".h5";
   hsize_t dims[] = {_rows, _cols};
   hid_t file_id = H5Fcreate(namer.str().c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
   H5LTmake_dataset(file_id, CASTLE_DATASET, 2, dims, H5T_NATIVE_DOUBLE, _u0);
